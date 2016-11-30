@@ -43,7 +43,7 @@ public:
 	void printPoints(int(&points)[50][2]);
 	void printPoints(int(&points)[50][3]);
 	void calculateTimes(int(&startingPoints)[50][3], int(&finishPoints)[50][2], double(&times)[50][1]);
-	double getIndividualTime(int (&startingPoint)[3], int (&finishingPoint)[2]);
+	double getIndividualTime(int startingPoint[3], int finishingPoint[2]);
 	double bestTime();
 };
 void UnitsMoving::printPoints(int(&points)[50][2])
@@ -74,7 +74,7 @@ void UnitsMoving::printPoints(double(&points)[50][1])
 {
 	for (int i = 0; i < 50; i++)
 	{
-		cout << *&points[i] << " ";
+		cout << *points[i] << " ";
 		cout << endl;
 	}
 	return;
@@ -96,23 +96,45 @@ void UnitsMoving::setPoint(int pos, int(&point)[2], int(&finishPoints)[50][2]) /
 	return;
 }
 
-double UnitsMoving::getIndividualTime(int (&startingPoint)[3], int(&finishingPoint)[2])
+double UnitsMoving::getIndividualTime(int startingPoint[3], int finishingPoint[2])
 {
 	double distance = 0;
-	double time = 0;
-	int startX = *(&startingPoint)[0];
-	int startY = *(&startingPoint)[1];
-	int velocity = *(&startingPoint)[2];
-	int finishX = *(&finishingPoint)[0];
-	int finishY = *(&finishingPoint)[1];
-	double distanceX = finishX-startX;
-	double distanceY = finishY - startY;
-	distance = sqrt(exp(distanceX) + exp(distanceY));
-	if (velocity !=0)
+	double time = 0; 
+	int startX = 0;
+	int startY = 0;
+	int velocity = 0;
+	int finishX = 0;
+	int finishY = 0;
+	double distanceX = 0;
+	double distanceY = 0;
+	double distanceSquared = 0;
+
+	startX = startingPoint[0];
+	startY = startingPoint[1];
+	velocity = startingPoint[2];
+	finishX = finishingPoint[0];
+	finishY = finishingPoint[1];
+	distanceX = finishX - startX;
+	distanceY = finishY - startY;
+	distanceSquared = ((distanceX)*(distanceX) +(distanceY)*(distanceY));
+	distance = sqrt(distanceSquared);
+	cout << "startX: " << startX << endl;
+	cout << "startY: " << startY << endl;
+	cout << "velocity: " << velocity << endl;
+	cout << "finishX " << finishX << endl;
+	cout << "finishY: " << finishY << endl<<endl;
+
+
+	if ((velocity !=0)&&(distance!=0))
 	{
-		time = distance / velocity;
+		time = distance/velocity;
 	}
-	else{
+	else if (distance==0)
+	{
+		time = 0;
+	}
+	else
+	{
 		time = -1;
 	}
 
@@ -120,9 +142,21 @@ double UnitsMoving::getIndividualTime(int (&startingPoint)[3], int(&finishingPoi
 }
 void UnitsMoving::calculateTimes(int(&startingPoints)[50][3], int(&finishPoints)[50][2], double(&times)[50][1]) 
 {
+
 	for (int i = 0; i < 50; i++)
 	{
-		*(&times)[i][0]=getIndividualTime((&startingPoints)[i][3],(&finishPoints)[i][2]);
+		int start[3];
+		int finish[2];
+		for (int j = 0; j < 3; j++)
+		{
+			start[j] = startingPoints[i][j];
+		}
+		for (int k = 0; k < 2; k++)
+		{
+			finish[k] = finishPoints[i][k];
+		}
+		
+		(*times)[i]=getIndividualTime(start,finish);
 	}
 
 }
@@ -139,6 +173,7 @@ int main()
 	int start00[3] = {1,1,1};
 	int start01[3] = { 0,1,1 };
 	int start02[3] = { 5,7,3 };
+	int start03[3] = { 5,7,1 };
 	int finish00[2] = { 1,1 };
 	int finish01[2] = { 1,1 };
 	int finish02[2] = { 1,1 };
@@ -147,6 +182,7 @@ int main()
 	units.setPoint(0, start00, units.startingPoints);
 	units.setPoint(1, start01, units.startingPoints);
 	units.setPoint(2, start02, units.startingPoints);
+	units.setPoint(3, start03, units.startingPoints);
 	units.setPoint(0, finish00, units.finishPoints);
 	units.setPoint(1, finish01, units.finishPoints);
 	units.setPoint(2, finish02, units.finishPoints);
