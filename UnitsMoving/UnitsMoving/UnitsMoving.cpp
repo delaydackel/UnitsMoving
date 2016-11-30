@@ -44,7 +44,7 @@ public:
 	void printPoints(int(&points)[50][3]);
 	void calculateTimes(int(&startingPoints)[50][3], int(&finishPoints)[50][2], double(&times)[50][1]);
 	double getIndividualTime(int startingPoint[3], int finishingPoint[2]);
-	double bestTime();
+	double findMaximum(double(&times)[50][1]);
 };
 void UnitsMoving::printPoints(int(&points)[50][2])
 {
@@ -118,12 +118,13 @@ double UnitsMoving::getIndividualTime(int startingPoint[3], int finishingPoint[2
 	distanceY = finishY - startY;
 	distanceSquared = ((distanceX)*(distanceX) +(distanceY)*(distanceY));
 	distance = sqrt(distanceSquared);
+	/*
 	cout << "startX: " << startX << endl;
 	cout << "startY: " << startY << endl;
 	cout << "velocity: " << velocity << endl;
 	cout << "finishX " << finishX << endl;
 	cout << "finishY: " << finishY << endl<<endl;
-
+	*/
 
 	if ((velocity !=0)&&(distance!=0))
 	{
@@ -160,9 +161,22 @@ void UnitsMoving::calculateTimes(int(&startingPoints)[50][3], int(&finishPoints)
 	}
 
 }
-double UnitsMoving::bestTime()
+double UnitsMoving::findMaximum(double(&values)[50][1])
 {
-	return 0.0;
+	double possibleMaximum;
+	double maximum=0;
+	possibleMaximum = *&values[0][0];
+	for (int i = 0; i < 50; i++)
+	{
+		if (possibleMaximum>*values[i])
+		{
+			maximum = possibleMaximum;
+		}
+		else {
+			possibleMaximum = *values[i];
+		}
+	}
+	return maximum;
 }
 
 
@@ -188,6 +202,7 @@ int main()
 	units.setPoint(2, finish02, units.finishPoints);
 	units.calculateTimes(units.startingPoints , units.finishPoints, units.times);
 	units.printPoints(units.times);
+	cout<< "Last arriving after: "<<units.findMaximum(units.times);
 	//units.printPoints(units.startingPoints);
 	//units.printPoints(units.finishPoints);
 	cin >> blub;
